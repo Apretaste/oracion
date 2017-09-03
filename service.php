@@ -19,7 +19,7 @@ class Oracion extends Service
 		$client->setClient($guzzle);
 
 		// create a crawler
-		$crawler = $client->request('GET', "http://www.plough.com/es/suscribir/oracion-diaria");
+		$crawler = $client->request('GET', "https://www.plough.com/es/suscribir/oracion-diaria");
 
 		// search for result
 		$base = $crawler->filter('.post-content p');
