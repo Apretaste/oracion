@@ -6,7 +6,7 @@ class Oracion extends Service
 {
 	/**
 	 * Function executed when the service is called
-	 * 
+	 *
 	 * @param Request
 	 * @return Response
 	 * */
@@ -36,6 +36,7 @@ class Oracion extends Service
 
 		// create the response
 		$response = new Response();
+		$response->setCache("day");
 		$response->setResponseSubject("Oracion del dia");
 		$response->createFromTemplate("basic.tpl", $responseContent);
 		return $response;
