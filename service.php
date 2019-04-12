@@ -71,7 +71,7 @@ class Service
 			 ]; 
 			
 		}
-		//$response->setCache("day");
+		$response->setCache("day");
 		$response->setLayout("oracion.ejs");
 		$response->setTemplate("main.ejs", $responseContent, $images);
 		
