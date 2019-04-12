@@ -1,27 +1,10 @@
 <?php
 
 use Goutte\Client;
-use GuzzleHttp\Client as GuzzleClient;
+use Symfony\Component\DomCrawler\Crawler;
 
-class Oracion extends Service
+class Service
 {
-
-	public $client = null;
-	/**
-	 * Crawler client
-	 *
-	 * @return \Goutte\Client
-	 */
-	public function getClient()
-	{
-		if (is_null($this->client))
-		{
-			$this->client = new Client();
-			$guzzle = new GuzzleClient(["verify" => false]);
-			$this->client->setClient($guzzle);
-		}
-		return $this->client;
-	}
 
 	/**
 	 * Function executed when the service is called
@@ -29,37 +12,68 @@ class Oracion extends Service
 	 * @param Request
 	 * @return Response
 	 * */
-	public function _main(Request $request)
+	public function _main(Request $request, Response &$response)
 	{
 		// create a new client
-		$client = $this->getClient();
-
+		$client = new Client();
+		
 		// create a crawler
 		$crawler = $client->request('GET', "https://www.plough.com/es/suscribir/oracion-diaria");
-
+	
 		// search for result
 		$base = $crawler->filter('.post-content p');
-
 		$verse = ($base->count() > 0) ? $base->eq(0)->text() : "";
 		$prayer = ($base->count() > 1) ? $base->eq(1)->html() : "";
+		$prayer = strip_tags($prayer);
 		$date = $crawler->filter('.post-date');
 		$date = $date->count() > 0 ? $date->text() : "";
-
-		if ($verse == "" && $prayer == "")
-			return new Response();
-
+		$date = explode(',',$date)[1];
+		$imageObj = $crawler->filter('.post .post-content > img');
+		if ($imageObj->count() != 0) {
+			$imgUrl = trim($imageObj->attr("src"));
+			$imgAlt = trim($imageObj->attr("alt"));
+	  
+			// get the image
+			if (!empty($imgUrl)) {
+			  $imgUrl = explode('?',$imgUrl)[0];
+			  $imgName = Utils::generateRandomHash() . "." . pathinfo($imgUrl, PATHINFO_EXTENSION);
+			  $img     = \Phalcon\DI\FactoryDefault::getDefault()->get('path')['root'] . "/temp/$imgName";
+			  file_put_contents($img, file_get_contents($imgUrl));
+			}
+		  }
+		//get images
+		$pathToService = Utils::getPathToService($response->serviceName);
+		$img2 = "$pathToService/images/background.jpg";
+		$img3 = "$pathToService/images/oracion1.png";
 		// create a json object to send to the template
 		$responseContent = array(
-			"verse" => $verse,
+			"verse"  => (string)$verse,
 			"prayer" => $prayer,
-			"date" => $date
+			"date"   => $date,
+			"img"    => $img,
+			"imgAlt" => $imgAlt,
+			"img2"   => $img2,
+			"img3"   => $img3
 		);
 
-		// create the response
-		$response = new Response();
-		$response->setCache("day");
-		$response->setResponseSubject("Oracion del dia");
-		$response->createFromTemplate("basic.tpl", $responseContent);
-		return $response;
+		// get the image if exist to send to the template
+		$images = [];
+		if (!empty($responseContent['img'])) {
+		  $images = [
+			  $responseContent['img'],
+			  $responseContent['img2'],
+			  $responseContent['img3']
+			 ];
+		}else{
+			$images = [
+			  $responseContent['img2'],
+			  $responseContent['img3']
+			 ]; 
+			
+		}
+		//$response->setCache("day");
+		$response->setLayout("oracion.ejs");
+		$response->setTemplate("main.ejs", $responseContent, $images);
+		
 	}
 }

@@ -1,0 +1,34 @@
+.parallax-container {
+    height: 4vh;
+  }
+
+#noPad{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+#noMarg{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+#noMarg2{
+    margin-bottom: 0px !important;
+}
+
+#space{
+    margin: 2vh;
+}
+
+#logo {
+    max-height: 30px;
+    width: auto;
+    line-height: 0px;
+    position: RELATIVE;
+    bottom: -1vw;
+}
+
+#footer {
+    padding:20px 0px; 
+    margin-top:20px;
+}
