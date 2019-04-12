@@ -1,6 +1,0 @@
-<service>
-	<serviceName>oracion</serviceName>
-	<serviceDescription>Oraciones de consuelo, valor y esperanza para cada dia</serviceDescription>
-	<creatorEmail>enide.bellamy@gmail.com</creatorEmail>
-	<serviceCategory>otros</serviceCategory>
-</service>
