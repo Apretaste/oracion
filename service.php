@@ -44,7 +44,7 @@ class Service
 		//get images
 		$pathToService = Utils::getPathToService($response->serviceName);
 		$img2 = "$pathToService/images/background.jpg";
-		$img3 = "$pathToService/images/oracion1.png";
+
 		// create a json object to send to the template
 		$responseContent = array(
 			"verse"  => (string)$verse,
@@ -53,7 +53,6 @@ class Service
 			"img"    => $img,
 			"imgAlt" => $imgAlt,
 			"img2"   => $img2,
-			"img3"   => $img3
 		);
 
 		// get the image if exist to send to the template
@@ -62,12 +61,10 @@ class Service
 		  $images = [
 			  $responseContent['img'],
 			  $responseContent['img2'],
-			  $responseContent['img3']
 			 ];
 		}else{
 			$images = [
 			  $responseContent['img2'],
-			  $responseContent['img3']
 			 ]; 
 			
 		}

@@ -20,13 +20,6 @@
     margin: 2vh;
 }
 
-#logo {
-    max-height: 30px;
-    width: auto;
-    line-height: 0px;
-    position: RELATIVE;
-    bottom: -1vw;
-}
 
 #footer {
     padding:20px 0px; 
