@@ -1,39 +1,12 @@
 <div class="row">
 	<div class="col s12">
-		<div class="col s12">
-			<h1 id="noMarg2">Oración para hoy</h1>
-			<small><%=date%></small>
-			<div id="space"></div>
-		</div>
+		<h1>Oración para hoy</h1>
+		<small><%= date %></small>
 
-		<div class="col s12">
-			<div id="noMarg" class="card-panel">
-				<h3>Versículo</h3>
-				<p><%=verse%></p>
-			</div>
-		</div>
+		<h2>Versículo</h2>
+		<p><%= verse %></p>
 
-		<div class="col s12">
-			<div id="noPad" class="col s12 parallax-container">
-				<div id="noPad" class="parallax">
-					<img src="{{APP_SERVICE_PATH}}/images/<%=img2%>">
-				</div>
-			</div>
-		</div>
-
-		<div class="col s12">
-			<div id="noMarg" class="card-panel">
-				<div class="card-stacked">
-					<div class="card-content">
-						<h3 class="header">Oración</h3>
-						<p><%=prayer%></p>
-					</div>
-					<div class="card-image">
-						<img class="responsive-img" src="{{APP_IMAGE_PATH}}/<%=img%>" alt="<%=imgAlt%>">
-					</div>
-				</div>
-			</div>
-		</div>
-
+		<h2>Oración</h2>
+		<p><%= prayer %></p>
 	</div>
 </div>
