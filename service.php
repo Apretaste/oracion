@@ -15,14 +15,16 @@ class Service
 	{
 		// get content from cache
 		$cache = Utils::getTempDir() . "oracion" . date("Ymd") . ".cache";
-		if(file_exists($cache)) $content = unserialize(file_get_contents($cache));
+		if (file_exists($cache)) {
+			$content = unserialize(file_get_contents($cache));
+		}
 
 		// crawl the data from the web
 		else {
 			// create a crawler
 			$client = new Client();
 			$crawler = $client->request('GET', "https://www.plough.com/es/suscribir/oracion-diaria");
-		
+
 			// search for result
 			$base = $crawler->filter('.post-content p');
 			$verse = ($base->count() > 0) ? $base->eq(0)->text() : "";
@@ -30,7 +32,7 @@ class Service
 			$prayer = strip_tags($prayer);
 			$date = $crawler->filter('.post-date');
 			$date = $date->count() > 0 ? $date->text() : "";
-			$date = explode(',',$date)[1];
+			$date = explode(',', $date)[1];
 
 			// create a json object to send to the template
 			$content = [
@@ -46,5 +48,7 @@ class Service
 		// send data to the view
 		$response->setCache("day");
 		$response->setTemplate("main.ejs", $content);
+
+		Challenges::complete('oracion', $request->person->id);
 	}
 }
