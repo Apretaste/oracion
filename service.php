@@ -2,19 +2,30 @@
 
 use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
+use Apretaste\Notifications;
+use Apretaste\Money;
+use Apretaste\Person;
+use Apretaste\Request;
+use Apretaste\Response;
+use Framework\Database;
+use Apretaste\Challenges;
+use Apretaste\Level;
+use Framework\Utils;
 
 class Service
 {
 	/**
 	 * Get the verse and prayer for today
 	 *
-	 * @param Request
-	 * @return Response
-	 * */
+	 * @param \Apretaste\Request  $request
+	 * @param \Apretaste\Response $response
+	 *
+	 * @throws \Framework\Alert
+	 */
 	public function _main(Request $request, Response &$response)
 	{
 		// get content from cache
-		$cache = Utils::getTempDir() . "oracion" . date("Ymd") . ".cache";
+		$cache = TEMP_PATH . "oracion" . date("Ymd") . ".cache";
 		if (file_exists($cache)) {
 			$content = unserialize(file_get_contents($cache));
 		}

@@ -1,8 +1,9 @@
 {
 	"name": "oracion",
-	"version": "3",
 	"description": "Oraciones de consuelo, valor y esperanza para cada día",
 	"category": "otros",
 	"creator": "salvi@apretaste.org",
-	"listed": true
+	"listed": true,
+	"guest": true,
+	"caption": "Ooracion"
 }
