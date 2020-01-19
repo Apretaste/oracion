@@ -1,7 +1,5 @@
 <?php
 
-use Goutte\Client;
-use Symfony\Component\DomCrawler\Crawler;
 use Apretaste\Notifications;
 use Apretaste\Money;
 use Apretaste\Person;
@@ -10,7 +8,7 @@ use Apretaste\Response;
 use Framework\Database;
 use Apretaste\Challenges;
 use Apretaste\Level;
-use Framework\Utils;
+use Framework\Crawler;
 
 class Service
 {
@@ -25,7 +23,7 @@ class Service
 	public function _main(Request $request, Response &$response)
 	{
 		// get content from cache
-		$cache = TEMP_PATH . "oracion" . date("Ymd") . ".cache";
+		$cache = TEMP_PATH .'oracion'. date('Ymd') .'.cache';
 		if (file_exists($cache)) {
 			$content = unserialize(file_get_contents($cache));
 		}
@@ -33,23 +31,22 @@ class Service
 		// crawl the data from the web
 		else {
 			// create a crawler
-			$client = new Client();
-			$crawler = $client->request('GET', "https://www.plough.com/es/suscribir/oracion-diaria");
+			Crawler::start('https://www.plough.com/es/suscribir/oracion-diaria');
 
 			// search for result
-			$base = $crawler->filter('.post-content p');
-			$verse = ($base->count() > 0) ? $base->eq(0)->text() : "";
-			$prayer = ($base->count() > 1) ? $base->eq(1)->html() : "";
+			$base = Crawler::filter('.post-content p');
+			$verse = ($base->count() > 0) ? $base->eq(0)->text() :'';
+			$prayer = ($base->count() > 1) ? $base->eq(1)->html() :'';
 			$prayer = strip_tags($prayer);
-			$date = $crawler->filter('.post-date');
-			$date = $date->count() > 0 ? $date->text() : "";
+			$date = Crawler::filter('.post-date');
+			$date = $date->count() > 0 ? $date->text() :'';
 			$date = explode(',', $date)[1];
 
 			// create a json object to send to the template
 			$content = [
-				"verse"  => (string) $verse,
-				"prayer" => $prayer,
-				"date"   => $date
+					'verse'  => (string) $verse,
+					'prayer' => $prayer,
+					'date'   => $date
 			];
 
 			// create the cache
@@ -57,8 +54,8 @@ class Service
 		}
 
 		// send data to the view
-		$response->setCache("day");
-		$response->setTemplate("main.ejs", $content);
+		$response->setCache('day');
+		$response->setTemplate('main.ejs', $content);
 
 		Challenges::complete('oracion', $request->person->id);
 	}
