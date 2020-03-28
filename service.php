@@ -18,13 +18,10 @@ class Service
 	public function _main(Request $request, Response &$response)
 	{
 		// get content from cache
-		$cache = TEMP_PATH .'oracion'. date('Ymd') .'.cache';
-		if (file_exists($cache)) {
-			$content = unserialize(file_get_contents($cache));
-		}
+		$content = self::loadCache();
 
 		// crawl the data from the web
-		else {
+		if ($content === null) {
 			// create a crawler
 			Crawler::start('https://www.plough.com/es/suscribir/oracion-diaria');
 
@@ -45,7 +42,7 @@ class Service
 			];
 
 			// create the cache
-			file_put_contents($cache, serialize($content));
+			self::saveCache($content);
 		}
 
 		// send data to the view
@@ -53,5 +50,48 @@ class Service
 		$response->setTemplate('main.ejs', $content);
 
 		Challenges::complete('oracion', $request->person->id);
+	}
+
+	/**
+	 * Get cache file name
+	 *
+	 * @param $name
+	 *
+	 * @return string
+	 */
+	public static function getCacheFileName($name): string
+	{
+		return TEMP_PATH.'cache/oracion_'.$name.'_'.date('Ymd').'.tmp';
+	}
+
+	/**
+	 * Load cache
+	 *
+	 * @param $name
+	 * @param null $cacheFile
+	 *
+	 * @return bool|mixed
+	 */
+	public static function loadCache($name = 'cache', &$cacheFile = null)
+	{
+		$data = null;
+		$cacheFile = self::getCacheFileName($name);
+		if (file_exists($cacheFile)) {
+			$data = unserialize(file_get_contents($cacheFile));
+		}
+		return $data;
+	}
+
+	/**
+	 * Save cache
+	 *
+	 * @param $name
+	 * @param $data
+	 * @param null $cacheFile
+	 */
+	public static function saveCache($data, $name = 'cache', &$cacheFile = null)
+	{
+		$cacheFile = self::getCacheFileName($name);
+		file_put_contents($cacheFile, serialize($data));
 	}
 }
