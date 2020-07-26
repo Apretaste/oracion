@@ -52,7 +52,7 @@ class Service
 		// challenges
 		Challenges::complete('oracion', $request->person->id);
 
-		Challenges::track('oracion-5', $request->person->id, ['last_date' => null, 'times' => 0], static function ($track) {
+		Challenges::track($request->person->id, 'oracion-5', ['last_date' => null, 'times' => 0], static function ($track) {
 			$format = 'Y-m-d';
 
 			// get yesterday
